@@ -56,24 +56,27 @@ uint16_t get_port()
 
 class BlackboxEnvironment : public ::testing::Environment
 {
-    public:
+public:
 
-        void SetUp()
-        {
-            global_port = get_port();
-            //Log::SetVerbosity(Log::Info);
-            //Log::SetCategoryFilter(std::regex("(SECURITY)"));
-        }
+    void SetUp()
+    {
+        global_port = get_port();
+        //Log::SetVerbosity(Log::Info);
+        //Log::SetCategoryFilter(std::regex("(SECURITY)"));
+    }
 
-        void TearDown()
-        {
-            //Log::Reset();
-            Log::KillThread();
-            eprosima::fastrtps::rtps::RTPSDomain::stopAll();
-        }
+    void TearDown()
+    {
+        //Log::Reset();
+        Log::KillThread();
+        eprosima::fastrtps::rtps::RTPSDomain::stopAll();
+    }
+
 };
 
-int main(int argc, char **argv)
+int main(
+        int argc,
+        char** argv)
 {
     testing::InitGoogleTest(&argc, argv);
     testing::AddGlobalTestEnvironment(new BlackboxEnvironment);

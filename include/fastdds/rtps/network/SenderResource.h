@@ -15,13 +15,15 @@
 #ifndef _FASTDDS_RTPS_SENDER_RESOURCE_H
 #define _FASTDDS_RTPS_SENDER_RESOURCE_H
 
+#include <fastrtps/rtps/common/Types.h>
+
 #include <functional>
 #include <vector>
 #include <chrono>
 
-namespace eprosima{
-namespace fastrtps{
-namespace rtps{
+namespace eprosima {
+namespace fastrtps {
+namespace rtps {
 
 class RTPSParticipantImpl;
 class MessageReceiver;
@@ -47,10 +49,11 @@ public:
      * @param timeout If transport supports it then it will use it as maximum blocking time.
      * @return Success of the send operation.
      */
-    bool send(const octet* data,
-              uint32_t dataLength,
-              const Locator_t& destination_locator,
-              const std::chrono::microseconds& timeout)
+    bool send(
+            const octet* data,
+            uint32_t dataLength,
+            const Locator_t& destination_locator,
+            const std::chrono::microseconds& timeout)
     {
         bool returned_value = false;
 
@@ -66,7 +69,8 @@ public:
      * Resources can only be transfered through move semantics. Copy, assignment, and
      * construction outside of the factory are forbidden.
      */
-    SenderResource(SenderResource&& rValueResource)
+    SenderResource(
+            SenderResource&& rValueResource)
     {
         clean_up.swap(rValueResource.clean_up);
         send_lambda_.swap(rValueResource.send_lambda_);
@@ -74,11 +78,18 @@ public:
 
     virtual ~SenderResource() = default;
 
-    int32_t kind() const { return transport_kind_; }
+    int32_t kind() const
+    {
+        return transport_kind_;
+    }
 
 protected:
 
-    SenderResource(int32_t transport_kind) : transport_kind_(transport_kind) {}
+    SenderResource(
+            int32_t transport_kind)
+        : transport_kind_(transport_kind)
+    {
+    }
 
     int32_t transport_kind_;
 
@@ -87,9 +98,11 @@ protected:
 
 private:
 
-    SenderResource()                                 = delete;
-    SenderResource(const SenderResource&)            = delete;
-    SenderResource& operator=(const SenderResource&) = delete;
+    SenderResource() = delete;
+    SenderResource(
+            const SenderResource&) = delete;
+    SenderResource& operator =(
+            const SenderResource&) = delete;
 };
 
 } // namespace rtps

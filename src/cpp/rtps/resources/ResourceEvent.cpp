@@ -150,6 +150,7 @@ void ResourceEvent::notify(
 bool ResourceEvent::register_timer_nts(
         TimedEventImpl* event)
 {
+    resize_collections();
     if (std::find(pending_timers_.begin(), pending_timers_.end(), event) == pending_timers_.end())
     {
         pending_timers_.push_back(event);
@@ -200,8 +201,7 @@ void ResourceEvent::run_io_service()
 
         // Don't allow other threads to manipulate the timer collections
         allow_vector_manipulation_ = false;
-        pending_timers_.reserve(timers_count_);
-        active_timers_.reserve(timers_count_);
+        resize_collections();
     }
 }
 
@@ -268,6 +268,11 @@ void ResourceEvent::do_timer_actions()
 
 void ResourceEvent::init_thread()
 {
+    std::unique_lock<TimedMutex> lock(mutex_);
+
+    allow_vector_manipulation_ = false;
+    resize_collections();
+
     thread_ = std::thread(&ResourceEvent::run_io_service, this);
 }
 
